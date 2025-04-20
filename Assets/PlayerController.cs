@@ -7,11 +7,14 @@ public class PlayerController : MonoBehaviour
 
     public LayerMask terrainLayer;
     public Rigidbody rb;
-    public SpriteRenderer sr;
+    public Transform visualsTransform;
+    private Animator animator;
+    private Vector3 moveDir;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = gameObject.GetComponent<Rigidbody>();
+        animator = visualsTransform.GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -32,16 +35,19 @@ public class PlayerController : MonoBehaviour
 
         float x = Input.GetAxis("Horizontal");
         float y = Input.GetAxis("Vertical");
-        Vector3 moveDir = new Vector3(x, 0, y);
-        rb.linearVelocity = moveDir * speed;
+        moveDir = new Vector3(x, 0, y);
+        animator.SetFloat("Speed", moveDir.magnitude);
 
-        if (x != 0 && x < 0)
+        if (x != 0)
         {
-            sr.flipX = true;
+            Vector3 scale = visualsTransform.localScale;
+            scale.x = x < 0 ? -1f : 1f;
+            visualsTransform.localScale = scale;
         }
-        else if (x != 0 && x > 0)
-        {
-            sr.flipX = false;
-        }
+    }
+
+    void FixedUpdate()
+    {
+        rb.linearVelocity = moveDir * speed;
     }
 }
