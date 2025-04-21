@@ -340,7 +340,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0, y: 5.299999, z: 41.33975}
+  m_LocalPosition: {x: 50, y: 5.299999, z: 41.33975}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -513,13 +513,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 410087039}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.042581312, y: 0.5983314, z: -0.041646175, w: 0.799032}
-  m_LocalPosition: {x: 485.91, y: 6, z: 557.83}
-  m_LocalScale: {x: -0.12785, y: -0.12785, z: -0.12785}
+  m_LocalRotation: {x: -0.041347988, y: 0.6923279, z: -0.12785286, w: 0.70896125}
+  m_LocalPosition: {x: 47.6, y: 10, z: 46.9}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 6.77, y: 73.6, z: -0.9}
+  m_LocalEulerAnglesHint: {x: 6.8, y: 87.81, z: -13.9}
 --- !u!114 &410087042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -603,11 +603,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc3d1a244aa94644791b028b8007cf67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forestLevel: 0.4
-  treeLevel: 0.8
-  weedLevel: 0.6
-  rockLevel: 0.85
-  scale: 0.1
+  greenTreeLevel: 0.2
+  birchTreeLevel: 0.15
+  mapleTreeLevel: 0.1
+  weedLevel: 0.5
+  rockLevel: 0.3
+  scale: 0.5
   size: 100
   grassPrefab: {fileID: 1587134545591773199, guid: cca9e57501d708a40a4bd6cda113c6e0, type: 3}
   greenTreePrefabs:
@@ -629,9 +630,18 @@ MonoBehaviour:
   - {fileID: 2368272101778347743, guid: 7baad441bf67cad418594029bb8e02e1, type: 3}
   - {fileID: 3143272395409366908, guid: e1b1a852247cae94ebcb3773d3705973, type: 3}
   - {fileID: 5223351321179065970, guid: 535846f20fdd415439951d5ef901d928, type: 3}
+  sheepPrefabs:
+  - {fileID: 1164528182394113639, guid: eedc825145c8644449ed25ecee1d0234, type: 3}
+  - {fileID: 8780835625694745733, guid: 0989089f4d3bac64289f13a5632a0b01, type: 3}
+  - {fileID: 2416549743174683640, guid: 2ef1d969820be0244a8e73c86c90bf9a, type: 3}
+  - {fileID: 3627116761749245293, guid: 84b7e95495ed47547bc13113e722702b, type: 3}
+  - {fileID: 1311468483397328586, guid: ebda3847c4fee4741a6b6ab9ebf5a82b, type: 3}
+  - {fileID: 8601316069077371027, guid: fd157f8ce20fdea49940f1a7d8723135, type: 3}
   treeParent: {fileID: 779202433}
   weedParent: {fileID: 555396328}
   rockParent: {fileID: 297754204}
+  sheepParent: {fileID: 1985133133}
+  sheepCount: 10
 --- !u!4 &774155108
 Transform:
   m_ObjectHideFlags: 0
@@ -648,6 +658,7 @@ Transform:
   - {fileID: 779202433}
   - {fileID: 555396328}
   - {fileID: 297754204}
+  - {fileID: 1985133133}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &779202432
@@ -913,7 +924,7 @@ Transform:
   m_GameObject: {fileID: 1007290559}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.3, z: 50}
+  m_LocalPosition: {x: 50, y: 0.3, z: 50}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1457,11 +1468,42 @@ Transform:
   m_GameObject: {fileID: 1877046664}
   serializedVersion: 2
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0, y: 5.299999, z: 41.33975}
+  m_LocalPosition: {x: 50, y: 5.299999, z: 41.33975}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1985133132
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1985133133}
+  m_Layer: 0
+  m_Name: Sheep
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1985133133
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1985133132}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 774155108}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
