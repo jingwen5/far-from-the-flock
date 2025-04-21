@@ -2,13 +2,15 @@ using UnityEngine;
 
 public class Grid : MonoBehaviour
 {
-    public float greenTreeLevel = .03f;
-    public float birchTreeLevel = .01f;
-    public float mapleTreeLevel = .02f;
+    public float greenTreeLevel = .2f;
+    public float birchTreeLevel = .15f;
+    public float mapleTreeLevel = .1f;
     public float weedLevel = .5f;
-    public float rockLevel = .1f;
-    public float scale = .3f;
+    public float rockLevel = .3f;
+    public float scale = .5f;
     public int size = 200;
+    public int sizeOffset = 25;
+    private int dirOffset = 40;
 
     public GameObject grassPrefab;
     public GameObject[] greenTreePrefabs;
@@ -22,19 +24,21 @@ public class Grid : MonoBehaviour
     public Transform weedParent;
     public Transform rockParent;
     public Transform sheepParent;
-    public int sheepCount = 10;
+    public Transform grassParent;
+    public int sheepCount = 20;
 
     void Start() {
-        float[,] noiseMap = new float[size, size];
+        float[,] noiseMap = new float[size + sizeOffset, size + sizeOffset];
         (float xOffset, float yOffset) = (Random.Range(-10000f, 10000f), Random.Range(-10000f, 10000f));
 
-        for (int y = 0; y < size; y++) {
-            for (int x = 0; x < size; x++) {
+        for (int y = 0; y < size + sizeOffset; y++) {
+            for (int x = 0; x < size + sizeOffset; x++) {
                 float noiseValue = Mathf.PerlinNoise(x * scale + xOffset, y * scale + yOffset);
                 noiseMap[x, y] = noiseValue;
             }
         }
 
+        // // Map for generating on edges
         // float[,] falloffMap = new float[size, size];
         // for (int y = 0; y < size; y++) {
         //     for (int x = 0; x < size; x++) {
@@ -45,6 +49,7 @@ public class Grid : MonoBehaviour
         //     }
         // }
         
+        // Generate grass terrain
         SpriteRenderer sr = grassPrefab.GetComponent<SpriteRenderer>();
         Sprite sprite = sr.sprite;
         float pixels = sprite.pixelsPerUnit;
@@ -54,39 +59,48 @@ public class Grid : MonoBehaviour
 
         Quaternion grassRotation = Quaternion.Euler(90f, 0f, 0f);
         Vector3 grassCenter = new Vector3(size / 2f, 0, size / 2f);
-        GameObject grass = Instantiate(grassPrefab, grassCenter, grassRotation, transform);
 
-        for (int y = 0; y < size; y+=2) {
-            for (int x = 0; x < size; x+=2) {
+        for (float y = 0; y < size; y+=height)
+        {
+            for (float x = 0; x < size; x+=width)
+            {
+                Vector3 pos = new Vector3(x + width / 2f, 0, y + height / 2f);
+                Instantiate(grassPrefab, pos, grassRotation, grassParent);
+            }
+        }
+
+        // Generate Terrain
+        for (int y = 0; y < size + sizeOffset; y+=2) {
+            for (int x = 0; x < size + sizeOffset; x+=2) {
                 if (isPathTile(x, y)) continue;
                 if (x == 0 && y == 50) continue;
 
                 float noiseValue = noiseMap[x, y];
 
-                if (noiseValue < birchTreeLevel)
-                {
-                    GameObject birchTree = PickRandom(birchTreePrefabs);
-                    SpawnObject(birchTree, x, 0, y, treeParent);
-                }
-                else if (noiseValue < mapleTreeLevel)
+                if (noiseValue < mapleTreeLevel)
                 {
                     GameObject mapleTree = PickRandom(mapleTreePrefabs);
-                    SpawnObject(mapleTree, x, 0, y, treeParent);
+                    SpawnObject(mapleTree, x - sizeOffset + dirOffset, 0, y - sizeOffset + dirOffset, treeParent);
+                }
+                else if (noiseValue < birchTreeLevel)
+                {
+                    GameObject birchTree = PickRandom(birchTreePrefabs);
+                    SpawnObject(birchTree, x - sizeOffset + dirOffset, 0, y - sizeOffset + dirOffset, treeParent);
                 }
                 else if (noiseValue < greenTreeLevel)
                 {
                     GameObject greenTree = PickRandom(greenTreePrefabs);
-                    SpawnObject(greenTree, x, 0, y, treeParent);
+                    SpawnObject(greenTree, x - sizeOffset + dirOffset, 0, y - sizeOffset + dirOffset, treeParent);
                 }
                 if (noiseValue < rockLevel)
                 {
                     GameObject rock = PickRandom(rockPrefabs);
-                    SpawnObject(rock, x, 0, y, rockParent);
+                    SpawnObject(rock, x - sizeOffset + dirOffset, 0, y - sizeOffset + dirOffset, rockParent);
                 }
                 if (noiseValue < weedLevel)
                 {
                     GameObject weed = PickRandom(weedPrefabs);
-                    SpawnObject(weed, x, 0, y, weedParent);
+                    SpawnObject(weed, x - sizeOffset + dirOffset, 0, y - sizeOffset + dirOffset, weedParent);
                 }
             }
         }
@@ -153,7 +167,7 @@ public class Grid : MonoBehaviour
             if (!blocked)
             {
                 GameObject sheep = PickRandom(sheepPrefabs);
-                SpawnObject(sheep, x, 0.07f, z, sheepParent, scaleMultiplier: 1f);
+                SpawnObject(sheep, x - sizeOffset + dirOffset, 0.07f, z - sizeOffset + dirOffset, sheepParent, scaleMultiplier: 1f);
                 spawned++;
             }
 

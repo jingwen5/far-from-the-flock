@@ -10,11 +10,26 @@ public class PlayerController : MonoBehaviour
     public Transform visualsTransform;
     private Animator animator;
     private Vector3 moveDir;
+
+    private AudioManager audioManager;
+    private AudioSource walkLoopSource;
+
+    void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = gameObject.GetComponent<Rigidbody>();
         animator = visualsTransform.GetComponent<Animator>();
+
+        // walk sound effect
+        walkLoopSource = gameObject.AddComponent<AudioSource>();
+        walkLoopSource.clip = audioManager.walk;
+        walkLoopSource.loop = true;
+        walkLoopSource.playOnAwake = false;
     }
 
     // Update is called once per frame
@@ -30,6 +45,19 @@ public class PlayerController : MonoBehaviour
             Vector3 scale = visualsTransform.localScale;
             scale.x = x < 0 ? -1f : 1f;
             visualsTransform.localScale = scale;
+        }
+        
+        bool isMoving = moveDir.magnitude > 0.01f;
+
+        if (isMoving)
+        {
+            if (!walkLoopSource.isPlaying)
+                walkLoopSource.Play();
+        }
+        else
+        {
+            if (walkLoopSource.isPlaying)
+                walkLoopSource.Stop();
         }
     }
 
