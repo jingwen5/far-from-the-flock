@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ZSort : MonoBehaviour
 {
-    public int baseSortingOrder = 1000;
+    public int baseSortingOrder = 6000;
     public int orderOffset = 0;
     // Update is called once per frame
     void LateUpdate()

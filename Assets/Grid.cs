@@ -2,14 +2,14 @@ using UnityEngine;
 
 public class Grid : MonoBehaviour
 {
-    public float greenTreeLevel = .2f;
-    public float birchTreeLevel = .15f;
-    public float mapleTreeLevel = .1f;
-    public float weedLevel = .5f;
-    public float rockLevel = .3f;
+    public float greenTreeLevel = .3f;
+    public float birchTreeLevel = .25f;
+    public float mapleTreeLevel = .2f;
+    public float weedLevel = .8f;
+    public float rockLevel = .5f;
     public float scale = .5f;
-    public int size = 200;
-    public int sizeOffset = 25;
+    public int size = 400;
+    public int sizeOffset = 70;
     private int dirOffset = 40;
 
     public GameObject grassPrefab;
@@ -19,13 +19,16 @@ public class Grid : MonoBehaviour
     public GameObject[] mapleTreePrefabs;
     public GameObject[] rockPrefabs;
     public GameObject[] sheepPrefabs;
+    public GameObject[] cloudPrefabs;
 
     public Transform treeParent;
     public Transform weedParent;
     public Transform rockParent;
     public Transform sheepParent;
     public Transform grassParent;
-    public int sheepCount = 20;
+    public Transform cloudParent;
+    public int sheepCount = 100;
+    public int cloudCount = 100;
 
     void Start() {
         float[,] noiseMap = new float[size + sizeOffset, size + sizeOffset];
@@ -106,6 +109,7 @@ public class Grid : MonoBehaviour
         }
 
         TrySpawnSheep();
+        TrySpawnClouds();
     }
     GameObject PickRandom(GameObject[] prefabs)
     {
@@ -172,6 +176,26 @@ public class Grid : MonoBehaviour
             }
 
             attempts++;
+        }
+    }
+
+    void TrySpawnClouds()
+    {
+        for (int i = 0; i < cloudCount; i++)
+        {
+            GameObject cloud = PickRandom(cloudPrefabs);
+
+            float x = Random.Range(-sizeOffset, size + sizeOffset);
+            float z = Random.Range(-sizeOffset, size + sizeOffset);
+
+            Vector3 position = new Vector3(x, 70f, z);
+            // Quaternion rotation = Quaternion.Euler(90f, 0f, 0f);
+            GameObject obj = Instantiate(cloud, position, Quaternion.identity, cloudParent);
+
+            CloudMover mover = obj.AddComponent<CloudMover>();
+            mover.speed = Random.Range(0.5f, 1.5f);
+
+            obj.transform.localScale *= Random.Range(5f,10f);
         }
     }
 }

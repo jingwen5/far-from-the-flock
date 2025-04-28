@@ -122,5 +122,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 179336b74b081284ba79e2aaa8204679, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseSortingOrder: 1000
+  baseSortingOrder: 6000
   orderOffset: 0
