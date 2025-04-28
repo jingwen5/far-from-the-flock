@@ -735,8 +735,8 @@ MonoBehaviour:
   greenTreeLevel: 0.2
   birchTreeLevel: 0.15
   mapleTreeLevel: 0.1
-  weedLevel: 0.8
-  rockLevel: 0.5
+  weedLevel: 0.6
+  rockLevel: 0.3
   scale: 0.5
   size: 400
   sizeOffset: 70

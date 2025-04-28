@@ -48,6 +48,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2304479761866589636, guid: 7baad441bf67cad418594029bb8e02e1, type: 3}
+      propertyPath: m_Size.x
+      value: 0.4454265
+      objectReference: {fileID: 0}
+    - target: {fileID: 2304479761866589636, guid: 7baad441bf67cad418594029bb8e02e1, type: 3}
+      propertyPath: m_Size.y
+      value: 0.39910063
+      objectReference: {fileID: 0}
+    - target: {fileID: 2304479761866589636, guid: 7baad441bf67cad418594029bb8e02e1, type: 3}
+      propertyPath: m_Center.x
+      value: -0.00038070977
+      objectReference: {fileID: 0}
+    - target: {fileID: 2304479761866589636, guid: 7baad441bf67cad418594029bb8e02e1, type: 3}
+      propertyPath: m_Center.y
+      value: 0.19955032
+      objectReference: {fileID: 0}
     - target: {fileID: 2368272101778347743, guid: 7baad441bf67cad418594029bb8e02e1, type: 3}
       propertyPath: m_Name
       value: Rock_2

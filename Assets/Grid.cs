@@ -31,6 +31,11 @@ public class Grid : MonoBehaviour
     public int cloudCount = 100;
 
     void Start() {
+        // find camera position for starting title
+        Vector3 camPos = Camera.main.transform.position;
+        float startingX = Mathf.Ceil(camPos.x);
+        float startingZ = Mathf.Ceil(camPos.z);
+
         float[,] noiseMap = new float[size + sizeOffset, size + sizeOffset];
         (float xOffset, float yOffset) = (Random.Range(-10000f, 10000f), Random.Range(-10000f, 10000f));
 
@@ -72,7 +77,28 @@ public class Grid : MonoBehaviour
             }
         }
 
-        // Generate Terrain
+        // Generate Weeds and Rocks
+        for (int y = 0; y < size + sizeOffset; y++) {
+            for (int x = 0; x < size + sizeOffset; x++) {
+                if (isPathTile(x, y)) continue;
+                if (x == 0 && y == 50) continue;
+
+                float noiseValue = noiseMap[x, y];
+
+                if (noiseValue < rockLevel)
+                {
+                    GameObject rock = PickRandom(rockPrefabs);
+                    SpawnObject(rock, x - sizeOffset + dirOffset, 0, y - sizeOffset + dirOffset, rockParent);
+                }
+                if (noiseValue < weedLevel)
+                {
+                    GameObject weed = PickRandom(weedPrefabs);
+                    SpawnObject(weed, x - sizeOffset + dirOffset, 0, y - sizeOffset + dirOffset, weedParent);
+                }
+            }
+        }
+
+        // Generate Trees
         for (int y = 0; y < size + sizeOffset; y+=2) {
             for (int x = 0; x < size + sizeOffset; x+=2) {
                 if (isPathTile(x, y)) continue;
@@ -95,21 +121,12 @@ public class Grid : MonoBehaviour
                     GameObject greenTree = PickRandom(greenTreePrefabs);
                     SpawnObject(greenTree, x - sizeOffset + dirOffset, 0, y - sizeOffset + dirOffset, treeParent);
                 }
-                if (noiseValue < rockLevel)
-                {
-                    GameObject rock = PickRandom(rockPrefabs);
-                    SpawnObject(rock, x - sizeOffset + dirOffset, 0, y - sizeOffset + dirOffset, rockParent);
-                }
-                if (noiseValue < weedLevel)
-                {
-                    GameObject weed = PickRandom(weedPrefabs);
-                    SpawnObject(weed, x - sizeOffset + dirOffset, 0, y - sizeOffset + dirOffset, weedParent);
-                }
             }
         }
 
         TrySpawnSheep();
         TrySpawnClouds();
+        SpawnStartingTree(startingX, startingZ);
     }
     GameObject PickRandom(GameObject[] prefabs)
     {
@@ -136,6 +153,14 @@ public class Grid : MonoBehaviour
 
         if (parent == treeParent)
             scaleMultiplier *= Random.Range(3.8f, 4.8f);
+        else if (parent == rockParent)
+        {
+            float roll = Random.value;
+            if (roll < 0.98f)
+                scaleMultiplier *= Random.Range(1.0f, 2.0f);
+            else
+                scaleMultiplier *= Random.Range(3.0f, 8.0f);
+        }
 
         obj.transform.localScale *= baseScale * scaleMultiplier;
     }
@@ -193,9 +218,19 @@ public class Grid : MonoBehaviour
             GameObject obj = Instantiate(cloud, position, Quaternion.identity, cloudParent);
 
             CloudMover mover = obj.AddComponent<CloudMover>();
-            mover.speed = Random.Range(0.5f, 1.5f);
+            mover.speed = Random.Range(0.3f, 0.7f);
 
-            obj.transform.localScale *= Random.Range(5f,10f);
+            obj.transform.localScale *= Random.Range(2f,10f);
+        }
+    }
+
+    void SpawnStartingTree(float startingX, float startingZ)
+    {
+        GameObject startingTree = PickRandom(mapleTreePrefabs);
+
+        if (startingTree != null)
+        {
+            SpawnObject(startingTree, startingX, 0f, startingZ, treeParent);
         }
     }
 }
