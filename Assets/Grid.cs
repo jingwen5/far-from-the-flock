@@ -31,6 +31,11 @@ public class Grid : MonoBehaviour
     public int cloudCount = 100;
 
     void Start() {
+        RegenerateWorld();
+    }
+
+    public void RegenerateWorld()
+    {
         // find camera position for starting title
         Vector3 camPos = Camera.main.transform.position;
         float startingX = Mathf.Ceil(camPos.x);
@@ -126,8 +131,9 @@ public class Grid : MonoBehaviour
 
         TrySpawnSheep();
         TrySpawnClouds();
-        SpawnStartingTree(startingX, startingZ);
+        // SpawnStartingTree(startingX, startingZ);
     }
+    
     GameObject PickRandom(GameObject[] prefabs)
     {
         if (prefabs.Length == 0) return null;
@@ -232,5 +238,14 @@ public class Grid : MonoBehaviour
         {
             SpawnObject(startingTree, startingX, 0f, startingZ, treeParent);
         }
+    }
+
+    public void HideWorld()
+    {
+        treeParent.gameObject.SetActive(false);
+        weedParent.gameObject.SetActive(false);
+        rockParent.gameObject.SetActive(false);
+        sheepParent.gameObject.SetActive(false);
+        cloudParent.gameObject.SetActive(false);
     }
 }

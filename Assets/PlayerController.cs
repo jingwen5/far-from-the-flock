@@ -65,4 +65,9 @@ public class PlayerController : MonoBehaviour
     {
         rb.linearVelocity = moveDir * speed;
     }
+
+    public bool IsMoving()
+    {
+        return moveDir.magnitude > 0.01f;
+    }
 }
