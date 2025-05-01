@@ -10,7 +10,6 @@ public class Disintegrator : MonoBehaviour
     private float idleTimer = 0f;
     private bool disintegrating = false;
     private bool fullyDisintegrated = false;
-    public Button restartButton;
     private GameObject titleCloudInstance;
     public GameObject titleCloudPrefab;
     
@@ -20,10 +19,10 @@ public class Disintegrator : MonoBehaviour
 
     void Start()
     {
-        restartButton.gameObject.SetActive(false);
-        restartButton.transform.position = new Vector3(-1000f, -1000f, 0f);
+        grid.RegenerateMap();
+        grid.RegenerateObjects();
+
         titleCloudInstance = Instantiate(titleCloudPrefab, startingCloudPos, Quaternion.Euler(22f, 0f, 0f));
-        titleCloudInstance.SetActive(true);
     }
 
     // Update is called once per frame
@@ -95,13 +94,11 @@ public class Disintegrator : MonoBehaviour
             elapsed += Time.deltaTime;
             yield return null;
         }
-
-        titleCloudInstance.SetActive(false);
     }
 
     IEnumerator SlideTitleCloudDown()
     {
-        Vector3 endPos = new Vector3(savedCamPos.x, 0f, savedCamPos.z);
+        Vector3 endPos = new Vector3(savedCamPos.x +  1.5f, 1f, savedCamPos.z + 6.661f);
         Vector3 startPos = titleCloudInstance.transform.position;
         float duration = 1.5f;
         float elapsed = 0f;
@@ -122,6 +119,8 @@ public class Disintegrator : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
 
         titleCloudInstance.transform.localScale = originalScale;
+
+        StartCoroutine(ResetWorld());
     }
 
     float EaseOutBack(float t)
@@ -212,12 +211,11 @@ public class Disintegrator : MonoBehaviour
 
         if (titleCloudInstance == null)
         {
-            titleCloudInstance = Instantiate(titleCloudPrefab, new Vector3(savedCamPos.x, 30f, savedCamPos.z), Quaternion.identity);
+            titleCloudInstance = Instantiate(titleCloudPrefab, new Vector3(savedCamPos.x + 1.5f, 30f, savedCamPos.z + 6.661f), Quaternion.Euler(22f, 0f, 0f));
         }
         else
         {
-            titleCloudInstance.transform.position = new Vector3(savedCamPos.x,30f, savedCamPos.z);
-            titleCloudInstance.SetActive(true);
+            titleCloudInstance.transform.position = new Vector3(savedCamPos.x + 1.5f, 30f, savedCamPos.z + 6.661f);
         }
 
         var sr = titleCloudInstance.GetComponent<SpriteRenderer>();
@@ -235,16 +233,6 @@ public class Disintegrator : MonoBehaviour
         StartCoroutine(SlideTitleCloudDown());
 
         Vector3 screenPos = Camera.main.WorldToScreenPoint(savedCamPos);
-        restartButton.transform.position = screenPos;
-        // Show the restart button
-        restartButton.gameObject.SetActive(true);
-    }
-
-    public void OnRestartButtonClicked()
-    {
-        restartButton.gameObject.SetActive(false);
-        restartButton.transform.position = new Vector3(-1000f, -1000f, 0f);
-        StartCoroutine(ResetWorld());
     }
 
     public IEnumerator ResetWorld()
@@ -252,7 +240,9 @@ public class Disintegrator : MonoBehaviour
         yield return new WaitForSeconds(1f);
         
         // Destroy old world, reload new
-        foreach (Transform parent in new Transform[] { grid.treeParent, grid.rockParent, grid.weedParent, grid.sheepParent, grid.cloudParent, grid.grassParent })
+        Transform[] parents = new Transform[] { grid.treeParent, grid.rockParent, grid.weedParent, grid.sheepParent, grid.cloudParent };
+        
+        foreach (Transform parent in parents)
         {
             foreach (Transform child in parent)
             {
@@ -260,18 +250,14 @@ public class Disintegrator : MonoBehaviour
             }
         }
 
-        if (titleCloudInstance != null)
-        {
-            Destroy(titleCloudInstance);
-        }
+        yield return new WaitForEndOfFrame();
 
-        yield return null;
-
-        grid.RegenerateWorld();
+        grid.RegenerateObjects();
         player.enabled = true;
         fullyDisintegrated = false;
         disintegrating = false;
         idleTimer = 0f;
+
         titleCloudCleared = false;
     }
 }

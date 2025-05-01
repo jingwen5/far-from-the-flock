@@ -30,38 +30,8 @@ public class Grid : MonoBehaviour
     public int sheepCount = 100;
     public int cloudCount = 100;
 
-    void Start() {
-        RegenerateWorld();
-    }
-
-    public void RegenerateWorld()
+    public void RegenerateMap()
     {
-        // find camera position for starting title
-        Vector3 camPos = Camera.main.transform.position;
-        float startingX = Mathf.Ceil(camPos.x);
-        float startingZ = Mathf.Ceil(camPos.z);
-
-        float[,] noiseMap = new float[size + sizeOffset, size + sizeOffset];
-        (float xOffset, float yOffset) = (Random.Range(-10000f, 10000f), Random.Range(-10000f, 10000f));
-
-        for (int y = 0; y < size + sizeOffset; y++) {
-            for (int x = 0; x < size + sizeOffset; x++) {
-                float noiseValue = Mathf.PerlinNoise(x * scale + xOffset, y * scale + yOffset);
-                noiseMap[x, y] = noiseValue;
-            }
-        }
-
-        // // Map for generating on edges
-        // float[,] falloffMap = new float[size, size];
-        // for (int y = 0; y < size; y++) {
-        //     for (int x = 0; x < size; x++) {
-        //         float xv = x / (float)size * 2 - 1;
-        //         float yv = y / (float)size * 2 - 1;
-        //         float v = Mathf.Max(Mathf.Abs(xv), Mathf.Abs(yv));
-        //         falloffMap[x, y] = Mathf.Pow(v, 3f) / (Mathf.Pow(v, 3f) + Mathf.Pow(2.2f - 2.2f * v, 3f));
-        //     }
-        // }
-        
         // Generate grass terrain
         SpriteRenderer sr = grassPrefab.GetComponent<SpriteRenderer>();
         Sprite sprite = sr.sprite;
@@ -79,6 +49,19 @@ public class Grid : MonoBehaviour
             {
                 Vector3 pos = new Vector3(x + width / 2f, 0, y + height / 2f);
                 Instantiate(grassPrefab, pos, grassRotation, grassParent);
+            }
+        }
+    }
+
+    public void RegenerateObjects()
+    {
+        float[,] noiseMap = new float[size + sizeOffset, size + sizeOffset];
+        (float xOffset, float yOffset) = (Random.Range(-10000f, 10000f), Random.Range(-10000f, 10000f));
+
+        for (int y = 0; y < size + sizeOffset; y++) {
+            for (int x = 0; x < size + sizeOffset; x++) {
+                float noiseValue = Mathf.PerlinNoise(x * scale + xOffset, y * scale + yOffset);
+                noiseMap[x, y] = noiseValue;
             }
         }
 
@@ -131,7 +114,6 @@ public class Grid : MonoBehaviour
 
         TrySpawnSheep();
         TrySpawnClouds();
-        // SpawnStartingTree(startingX, startingZ);
     }
     
     GameObject PickRandom(GameObject[] prefabs)
@@ -179,7 +161,7 @@ public class Grid : MonoBehaviour
     void TrySpawnSheep()
     {
         int attempts = 0;
-        int maxAttempts = 500;
+        int maxAttempts = 1000;
         int spawned = 0;
 
         while (spawned < sheepCount && attempts < maxAttempts)
@@ -227,16 +209,6 @@ public class Grid : MonoBehaviour
             mover.speed = Random.Range(0.3f, 0.7f);
 
             obj.transform.localScale *= Random.Range(2f,10f);
-        }
-    }
-
-    void SpawnStartingTree(float startingX, float startingZ)
-    {
-        GameObject startingTree = PickRandom(mapleTreePrefabs);
-
-        if (startingTree != null)
-        {
-            SpawnObject(startingTree, startingX, 0f, startingZ, treeParent);
         }
     }
 
